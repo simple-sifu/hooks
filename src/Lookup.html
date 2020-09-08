@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanilla Javascript</title>
+</head>
+
+<style>
+
+    /* reset margin padding defaults to 0 to avoid confusion */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --brownish-color:#783F27;
+    }
+
+    /* will use rem so that we will use same standard size */
+    html {
+        font-size: 16px
+    }
+
+    body {
+        background-color: black;
+    }
+
+    h1 {
+        text-align: center;
+        color: black;
+    }
+
+    .header {
+        background-color: white;
+        margin-bottom: 1rem;
+        position: sticky;
+        top: 0;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    .column {
+        background-color:black;
+    }
+
+    /* using flex because we want it to be responsive */
+    .container {
+        display: flex;
+        justify-content: space-evenly; 
+        flex-wrap: wrap;
+     }
+
+    .column-headers {
+        background-color: white;
+        padding: 1rem;
+        text-align: center;
+        color: black;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 20rem;
+    }
+
+    li {
+        background-color: white;
+        padding: 2rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+
+        color: var(--brownish-color);
+        height: 28rem;
+        width: 20rem;
+    }
+
+    h2 {
+        text-transform: capitalize;
+        color: black;
+    }
+
+    img {
+        height: 15rem;
+        width: 15rem;
+    }
+
+
+</style>
+
+<body>
+    <div class=header>
+        <h1> Advance Local - Vanilla JavaScript Version </h1>
+    </div>
+
+    <div class="container">
+        <div class="column">
+            <div class="column-headers">
+                <h2>Star Wars Characters</h2>
+            </div>
+            <ul id="starWars">
+            </ul>
+
+        </div>
+        <div class="column">
+            <div class="column-headers">
+                <h2>Pokemon Characters</h2>
+            </div>
+            <ul id="pokemon">
+            </ul>
+        </div>
+    </div>
+  
+
+
+    <script>
+        const SWAPI_api = "https://swapi.py4e.com/api/people/";
+        const Pokemon_api = "https://pokeapi.co/api/v2/pokemon/"
+        const starWarsID = "#starWars";
+        const pokemonID = "#pokemon";
+
+        const imageURL = {
+            "Luke Skywalker": "https://upload.wikimedia.org/wikipedia/en/9/9b/Luke_Skywalker.png",
+            "C-3PO": "https://upload.wikimedia.org/wikipedia/en/thumb/5/5c/C-3PO_droid.png/220px-C-3PO_droid.png",
+            "R2-D2": "https://upload.wikimedia.org/wikipedia/en/3/39/R2-D2_Droid.png",
+            "Darth Vader": "https://upload.wikimedia.org/wikipedia/en/7/76/Darth_Vader.jpg",
+            "Leia Organa": "https://upload.wikimedia.org/wikipedia/en/1/1b/Princess_Leia%27s_characteristic_hairstyle.jpg",
+            "bulbasaur": "https://cdn.bulbagarden.net/upload/2/21/001Bulbasaur.png",
+            "ivysaur": "https://cdn.bulbagarden.net/upload/7/73/002Ivysaur.png",
+            "venusaur": "https://img.pokemondb.net/artwork/large/venusaur.jpg",
+            "charmander": "https://upload.wikimedia.org/wikipedia/en/a/a5/Pok%C3%A9mon_Charmander_art.png",
+            "charmeleon":"https://img.pokemondb.net/artwork/large/charmeleon.jpg"
+        }
+
+        // using onload instead of document.ready to avoid adding jquery library
+        // for this example the comparison is not necessary becoz no images loaded.
+        window.onload = () =>{
+            // console.log('----window onload fired---')
+            fetchAndRender(SWAPI_api);
+            fetchAndRender(Pokemon_api);
+
+        }
+
+        function fetchAndRender(url){
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                parseAPI(data)
+                // window.postMessage({ action: renderFinishedAction, payload: url });
+            });
+        }
+
+        function parseAPI(data){
+
+           // placeholder where column data needs to be attached. 
+           let columnName = data.next.includes(SWAPI_api.substring(8,18)) ? starWarsID : pokemonID ;
+           
+           // requirements for 5-10 characters in each column
+           const characterList = data.results.slice(0,5);
+           characterList.forEach( currCharacter => {
+                let character = createCharacter(currCharacter);
+                addCharacterToList(character, columnName);
+           })
+
+        }
+
+        // populate li using character properties 
+        function createCharacter(character){
+        
+             // limit to display only 8 character properties.
+            const characterKeys = Object.keys(character).slice(0,8)
+            
+            return characterKeys.reduce((acc, currKey) =>{
+                let currVal = character[currKey];
+                if (currKey === "name"){
+                    let h2 = createCharacterNameH2(currVal);
+                    acc.appendChild(h2);
+                    let img = createCharacterImage(currVal);
+                    acc.appendChild(img);
+                }else{
+                    let div = createCharacterDIV(currKey, currVal)
+                    acc.appendChild(div);
+                }
+                return acc;
+            }, document.createElement('li'))
+
+        }
+
+        function createCharacterNameH2(name){
+            const h2 = document.createElement('h2');
+            h2.textContent = name;
+            return h2;
+        }
+
+        function createCharacterImage(name){
+            const img = document.createElement('img');
+            img.src=imageURL[name];
+            img.id=name;
+            img.alt=`${name}`;
+            return img
+        }
+
+        function createCharacterDIV(key, value){
+            const div = document.createElement('div');
+
+            let newKey = key.split("_").reduce( (acc, currVal) =>{
+                acc.push(currVal.charAt(0).toUpperCase() + currVal.slice(1))
+                return acc;  
+            },[]).join(" ");
+
+            div.textContent = `${newKey}: ${value}`;
+            return div;            
+        }
+
+        function addCharacterToList(li, listClassName){
+            const ul = document.querySelector(listClassName)
+            ul.appendChild(li);  
+        }
+
+
+    </script>
+
+</body>
+</html>
