@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-function APIList({url}){
+function APIList(){
 
-  if (url.contains("swapi")){
-    const scharArray = useFetchAPI(SWAPI_API);
-    console.log(`scharArray =, ${JSON.stringify(scharArray)}`)
-    return scharArray
-  }else{
-    const pCharArray = useFetchAPI(POKEMON_API)
-    console.log(`pcharArray =, ${JSON.stringify(pcharArray)}`)
-    return pCharArray
-  }
 
 }
 
 function Display() {
-    const SWAPI_API = "https://swapi.py4e.com/api/people/";
-    const POKEMON_API = "https://pokeapi.co/api/v2/pokemon/";
+
+   
+  const characterSWLIST = useFetchAPI("SW");
+  const characterPKLIST = useFetchAPI("PK");
+
 
     return (
         <div className="">
@@ -25,19 +19,18 @@ function Display() {
               <h1> Advance Local - React Version </h1>
             </div>
 
-        <div class="container">
-            <div class="column">
-              <div class="column-headers">
+        <div className="container">
+            <div className="column">
+              <div className="column-headers">
                 <h2>Star Wars Characters</h2>
               </div>
-              <APIList url={SWAPI_API}/>
+
 
             </div>
-            <div class="column">
-                <div class="column-headers">
+            <div className="column">
+                <div className="column-headers">
                   <h2>Pokemon Characters</h2>
                 </div>
-                <APIList url={POKEMON_API}/>
             </div>
         </div>
 
@@ -45,24 +38,33 @@ function Display() {
     );
 }
 
-function useFetchAPI(url){
-  
+function useFetchAPI(key){
+
+  const SWAPI_API = "https://swapi.py4e.com/api/people/";
+  const POKEMON_API = "https://pokeapi.co/api/v2/pokemon/";
+
   const [characterSWList, setCharacterSWList] = useState([]);
   const [characterPKList, setCharacterPKList] = useState([]);
+  
+  let url = key === "SW" ? SWAPI_API : POKEMON_API;
   useEffect(() => {
     fetch(url)
     .then(response => response.json())
     .then(data => {
         const characterList = parseAPI(data);
-        if (url.contains("swapi")){
+       
+        if (key === "SW"){
           setCharacterSWList(characterList);
+          console.log(`characterSWList - ${JSON.stringify(characterList)}`)
           return characterSWList;
         }else{
           setCharacterPKList(characterList);
+          console.log(`characterPKList - ${JSON.stringify(characterList)}`)
           return characterPKList;
         }
+
     });
-  });
+  },[]);
 
 }
 
@@ -70,9 +72,10 @@ function parseAPI(data){
   
   // limit to 5 characters per column
   const dataList = data.results.slice(0,5);
-  return dataList.forEach( currCharacter => {
+  return dataList.reduce( (acc,currCharacter) => {
      const character = createCharacter(currCharacter);
-     acc.push(character)        
+     acc.push(character);
+     return acc;       
   },[])
 
 }
