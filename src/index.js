@@ -1,41 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-function APIList(){
-
-
-}
-
 function Display() {
 
-   
-  const characterSWLIST = useFetchAPI("SW");
-  const characterPKLIST = useFetchAPI("PK");
+  const SWAPI_API = "https://swapi.py4e.com/api/people/";
+  const POKEMON_API = "https://pokeapi.co/api/v2/pokemon/";
+
+  const [characterSWList, setCharacterSWList] = useState([]);
+  const [characterPKList, setCharacterPKList] = useState([]);
+  
+  useEffect(() => {
+    fetch(SWAPI_API)
+    .then(response => response.json())
+    .then(data => {
+        const characterList = parseAPI(data);
+        const characterSWLI = characterList.map( currCharacter =>{
+            const name = currCharacter.name;
+            return <li key={name}>{name} </li>;
+        });
+        setCharacterSWList(characterSWLI);
+    })
+  },[]);
+
+  useEffect(() => {
+    fetch(POKEMON_API)
+    .then(response => response.json())
+    .then(data => {
+        const characterList = parseAPI(data);
+        const characterPKLI = characterList.map( currCharacter =>{
+            const name = currCharacter.name;
+            return <li key={name}>{name} </li>;
+        });
+        setCharacterPKList(characterPKLI);
+    })
+  },[]);
 
 
-    return (
-        <div className="">
-            <div className="header">
-              <h1> Advance Local - React Version </h1>
+  return (
+      <div className="">
+          <div className="header">
+            <h1> Advance Local - React Version </h1>
+          </div>
+
+      <div className="container">
+          <div className="column">
+            <div className="column-headers">
+              <h2>Star Wars Characters</h2>
+              <ul>
+              {characterSWList}
+              </ul>
+     
             </div>
 
-        <div className="container">
-            <div className="column">
+
+          </div>
+          <div className="column">
               <div className="column-headers">
-                <h2>Star Wars Characters</h2>
+                <h2>Pokemon Characters</h2>
+                <ul>
+                {characterPKList}
+              </ul>
               </div>
-
-
-            </div>
-            <div className="column">
-                <div className="column-headers">
-                  <h2>Pokemon Characters</h2>
-                </div>
-            </div>
-        </div>
-
+          </div>
       </div>
-    );
+
+    </div>
+  );
 }
 
 function useFetchAPI(key){
@@ -54,8 +84,15 @@ function useFetchAPI(key){
         const characterList = parseAPI(data);
        
         if (key === "SW"){
-          setCharacterSWList(characterList);
-          console.log(`characterSWList - ${JSON.stringify(characterList)}`)
+          
+          console.log(`characterSWList1 - ${JSON.stringify(characterList)}`)
+          const characterSWList1 = characterList.map( currCharacter =>{
+            const name = currCharacter.name;
+            return <li key={name}>{name} </li>;
+          });
+          setCharacterSWList(characterSWList1);
+          console.log(`characterSWList to be returned -, ${JSON.stringify(characterSWList)}`)
+          console.log(`characterSWList1 -, ${JSON.stringify(characterSWList1)}`)
           return characterSWList;
         }else{
           setCharacterPKList(characterList);
@@ -80,7 +117,7 @@ function parseAPI(data){
 
 }
 
-
+ 
 // populate li using character properties 
 function createCharacter(character){
 
