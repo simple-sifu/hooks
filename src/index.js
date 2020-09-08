@@ -1,12 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-function ListItem({character}){
-  const name = character.name;
-  return <li>{name}</li>;
-}
-
 function Display() {
+
+  const htmlStyle =  {
+    fontSize: 16,
+    margin: 0,
+    padding: 0,
+    boxSizing: borderBox
+  }
+  
+  const bodyStyle = {
+    backgroundColor: black
+  }
+  
+  const h1Style = {
+    textAlign: center,
+    color: black
+  }
+  
+  const headerStyle = {
+    backgroundColor: white,
+    marginBottom: 10,
+    position: sticky,
+    top: 0
+  }
+  
+  const ulStyle = {
+    listStyleType: none
+  }
+  
+  const columnStyle = {
+    backgroundColor:black
+  }
+  
+  /* using flex because we want it to be responsive */
+  const containerStyle = {
+    display: flex,
+    justifyContent: spaceEvenly,
+    flexWrap: wrap,
+  }
+  
+  const columnHeadersStyle = {
+    backgroundColor: white,
+    padding: 10,
+    textAlign: center,
+    color: black,
+    marginTop: 10,
+    marginBottom: 10,
+    width: 20
+  }
+  
+  const liStyle = {
+    backgroundColor: white,
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    color: brown,
+    height: 28,
+    width: 20
+  };
+  
+  const h2Style = {
+    textTransform: capitalize,
+    color: black
+  }
+  
+      
+  const imgStyle =  {
+      height: 15,
+      width: 15,
+  }
+  
+
 
   const [characterSWList, setCharacterSWList] = useState([]);
   const [characterPKList, setCharacterPKList] = useState([]);
@@ -15,10 +81,11 @@ function Display() {
 
 
   return (
-      <div className="">
-          <div className="header">
+      <div>
+             
+      <div style={headerStyle} className="header">
             <h1> Advance Local - React Version </h1>
-          </div>
+      </div>
 
       <div className="container">
           <div className="column">
@@ -58,7 +125,7 @@ function useFetchAPI(url, setCharacterList){
     .then(data => {
         const characterList = parseAPI(data);
         const characterLI = characterList.map( currCharacter =>{
-            return <ListItem key={currCharacter.name} character={currCharacter}/>
+          return <ListItem key={currCharacter} character={currCharacter}/>
         });
         setCharacterList(characterLI);
     })
@@ -84,6 +151,19 @@ function parseAPI(data){
 // populate li using character properties 
 function createCharacter(character){
 
+  // limit to display only 8 character properties.
+  const characterKeys = Object.keys(character).slice(0,8)
+  
+  return characterKeys.reduce((acc, currKey) =>{
+      acc[currKey] = character[currKey];
+      return acc;
+
+  }, {})
+
+}
+
+function getImageURL(name){
+
   const imageURL = {
     "Luke Skywalker": "https://upload.wikimedia.org/wikipedia/en/9/9b/Luke_Skywalker.png",
     "C-3PO": "https://upload.wikimedia.org/wikipedia/en/thumb/5/5c/C-3PO_droid.png/220px-C-3PO_droid.png",
@@ -96,23 +176,29 @@ function createCharacter(character){
     "charmander": "https://upload.wikimedia.org/wikipedia/en/a/a5/Pok%C3%A9mon_Charmander_art.png",
     "charmeleon":"https://img.pokemondb.net/artwork/large/charmeleon.jpg"
   }
-      
+
+  return imageURL[name];
+
+}
+
+function ListItem({character}){
+  
   // limit to display only 8 character properties.
   const characterKeys = Object.keys(character).slice(0,8)
-  
+
   return characterKeys.reduce((acc, currKey) =>{
-
-      // let currVal = character[currKey];
-      // if (currKey === "name"){
-      //     acc.push(<h2>{currVal}</h2>);
-      //     acc.push(<img src={imageURL[currVal]} id={currVal} alt={currVal}></img>)
-      // }else{
-      //     acc.push(<div>{`${currKey}: ${currVal}`}</div>);
-      // }
-      acc[currKey] = character[currKey];
+      let currVal = character[currKey];
+      if (currKey === "name"){
+          const h2 = <h2>{currVal}</h2>
+          acc.push(h2);
+          const img = <img src={getImageURL(currVal)} alt={currVal} id={currVal}/>
+          acc.push(img);
+      }else{
+          const div = <div> {`${currKey}: ${currVal}`}</div>
+          acc.push(div)
+      }
       return acc;
-
-  }, {})
+  },[] )
 
 }
 
