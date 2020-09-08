@@ -1,39 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-function Display() {
+function ListItem({character}){
+  const name = character.name;
+  return <li>{name}</li>;
+}
 
-  const SWAPI_API = "https://swapi.py4e.com/api/people/";
-  const POKEMON_API = "https://pokeapi.co/api/v2/pokemon/";
+function Display() {
 
   const [characterSWList, setCharacterSWList] = useState([]);
   const [characterPKList, setCharacterPKList] = useState([]);
-  
-  useEffect(() => {
-    fetch(SWAPI_API)
-    .then(response => response.json())
-    .then(data => {
-        const characterList = parseAPI(data);
-        const characterSWLI = characterList.map( currCharacter =>{
-            const name = currCharacter.name;
-            return <li key={name}>{name} </li>;
-        });
-        setCharacterSWList(characterSWLI);
-    })
-  },[]);
-
-  useEffect(() => {
-    fetch(POKEMON_API)
-    .then(response => response.json())
-    .then(data => {
-        const characterList = parseAPI(data);
-        const characterPKLI = characterList.map( currCharacter =>{
-            const name = currCharacter.name;
-            return <li key={name}>{name} </li>;
-        });
-        setCharacterPKList(characterPKLI);
-    })
-  },[]);
+  useFetchAPI("SW", setCharacterSWList);
+  useFetchAPI("PK", setCharacterPKList);
 
 
   return (
@@ -68,39 +46,24 @@ function Display() {
   );
 }
 
-function useFetchAPI(key){
+function useFetchAPI(url, setCharacterList){
 
   const SWAPI_API = "https://swapi.py4e.com/api/people/";
   const POKEMON_API = "https://pokeapi.co/api/v2/pokemon/";
-
-  const [characterSWList, setCharacterSWList] = useState([]);
-  const [characterPKList, setCharacterPKList] = useState([]);
   
-  let url = key === "SW" ? SWAPI_API : POKEMON_API;
   useEffect(() => {
-    fetch(url)
+
+    fetch(url === "SW" ? SWAPI_API : POKEMON_API)
     .then(response => response.json())
     .then(data => {
         const characterList = parseAPI(data);
-       
-        if (key === "SW"){
-          
-          console.log(`characterSWList1 - ${JSON.stringify(characterList)}`)
-          const characterSWList1 = characterList.map( currCharacter =>{
-            const name = currCharacter.name;
-            return <li key={name}>{name} </li>;
-          });
-          setCharacterSWList(characterSWList1);
-          console.log(`characterSWList to be returned -, ${JSON.stringify(characterSWList)}`)
-          console.log(`characterSWList1 -, ${JSON.stringify(characterSWList1)}`)
-          return characterSWList;
-        }else{
-          setCharacterPKList(characterList);
-          console.log(`characterPKList - ${JSON.stringify(characterList)}`)
-          return characterPKList;
-        }
+        const characterLI = characterList.map( currCharacter =>{
+            return <ListItem key={currCharacter.name} character={currCharacter}/>
+        });
+        setCharacterList(characterLI);
+    })
+    
 
-    });
   },[]);
 
 }
