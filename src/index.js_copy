@@ -3,74 +3,74 @@ import ReactDOM from 'react-dom';
 
 function Display() {
 
-  const htmlStyle =  {
-    fontSize: 16,
-    margin: 0,
-    padding: 0,
-    boxSizing: borderBox
-  }
+  // const htmlStyle =  {
+  //   fontSize: 16,
+  //   margin: 0,
+  //   padding: 0,
+  //   boxSizing: borderBox
+  // }
   
-  const bodyStyle = {
-    backgroundColor: black
-  }
+  // const bodyStyle = {
+  //   backgroundColor: black
+  // }
   
-  const h1Style = {
-    textAlign: center,
-    color: black
-  }
+  // const h1Style = {
+  //   textAlign: center,
+  //   color: black
+  // }
   
-  const headerStyle = {
-    backgroundColor: white,
-    marginBottom: 10,
-    position: sticky,
-    top: 0
-  }
+  // const headerStyle = {
+  //   backgroundColor: white,
+  //   marginBottom: 10,
+  //   position: sticky,
+  //   top: 0
+  // }
   
-  const ulStyle = {
-    listStyleType: none
-  }
+  // const ulStyle = {
+  //   listStyleType: none
+  // }
   
-  const columnStyle = {
-    backgroundColor:black
-  }
+  // const columnStyle = {
+  //   backgroundColor:black
+  // }
   
-  /* using flex because we want it to be responsive */
-  const containerStyle = {
-    display: flex,
-    justifyContent: spaceEvenly,
-    flexWrap: wrap,
-  }
+  // /* using flex because we want it to be responsive */
+  // const containerStyle = {
+  //   display: flex,
+  //   justifyContent: spaceEvenly,
+  //   flexWrap: wrap,
+  // }
   
-  const columnHeadersStyle = {
-    backgroundColor: white,
-    padding: 10,
-    textAlign: center,
-    color: black,
-    marginTop: 10,
-    marginBottom: 10,
-    width: 20
-  }
+  // const columnHeadersStyle = {
+  //   backgroundColor: white,
+  //   padding: 10,
+  //   textAlign: center,
+  //   color: black,
+  //   marginTop: 10,
+  //   marginBottom: 10,
+  //   width: 20
+  // }
   
-  const liStyle = {
-    backgroundColor: white,
-    padding: 10,
-    marginTop: 10,
-    marginBottom: 10,
-    color: brown,
-    height: 28,
-    width: 20
-  };
+  // const liStyle = {
+  //   backgroundColor: white,
+  //   padding: 10,
+  //   marginTop: 10,
+  //   marginBottom: 10,
+  //   color: brown,
+  //   height: 28,
+  //   width: 20
+  // };
   
-  const h2Style = {
-    textTransform: capitalize,
-    color: black
-  }
+  // const h2Style = {
+  //   textTransform: capitalize,
+  //   color: black
+  // }
   
       
-  const imgStyle =  {
-      height: 15,
-      width: 15,
-  }
+  // const imgStyle =  {
+  //     height: 15,
+  //     width: 15,
+  // }
   
 
 
@@ -83,7 +83,7 @@ function Display() {
   return (
       <div>
              
-      <div style={headerStyle} className="header">
+      <div className="header">
             <h1> Advance Local - React Version </h1>
       </div>
 
@@ -131,7 +131,7 @@ function useFetchAPI(url, setCharacterList){
     })
     
 
-  },[]);
+  });
 
 }
 
